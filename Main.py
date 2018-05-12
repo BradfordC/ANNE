@@ -25,8 +25,10 @@ def GetAccuracy(set, network):
     return correctCount / len(set)
 
 
-# data = GetInput.LoadAllCategories("D:/Chris/Documents/School/Machine Learning/Project/4Categories", "Fast")
-data = GetInput.LoadAllCategories("D:/Chris/Documents/School/Machine Learning/Project/SmallSet", "Hist")
+def Run(trainingSet, validationSet, testingSet):
+
+
+data = GetInput.LoadAllCategories("D:/Chris/Dropbox/Dropbox/School/ANN/SmallSet", "Full")
 random.shuffle(data)
 data = data[:]
 print(len(data))
@@ -45,7 +47,7 @@ maxSum = 0
 useDropout = True
 
 for run in range(numRuns):
-    net = Network.Network(len(data[0][0]), len(data[0][1]), [20], useDropout)
+    net = Network.Network(len(data[0][0]), len(data[0][1]), [400,400], useDropout)
 
     groupCount = 0
     groupSize = 500
@@ -56,7 +58,7 @@ for run in range(numRuns):
     runAcc = 0
     maxAcc = 0
 
-    for i in range(25):
+    for i in range(100):
         for image in trainingSet:
             input = np.array(image[0])
             expected = np.array(image[1])

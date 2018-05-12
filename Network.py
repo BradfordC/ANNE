@@ -50,5 +50,10 @@ class Network:
             gradient = gradients[i]
             layer.Weights = np.add(layer.Weights, np.multiply(gradient, learningRate))
 
+    def RemoveDropout(self):
+        for layer in self.Layers:
+            layer.Weights = np.multiply(layer.Weights, (1 - layer.DropoutRate))
+            layer.DropoutRate = 0
+
     def MakeCopy(self):
         return copy.deepcopy(self)
