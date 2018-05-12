@@ -30,8 +30,21 @@ class Network:
         return self.OutputLayer.GetError(expected)
 
     def Backprop(self, expected, learningRate):
+        gradients = self.GetGradients(expected)
+        self.ApplyGradients(gradients, learningRate)
+
+    def GetGradients(self, expected):
+        gradients = []
         nextLayerDeltas = self.OutputLayer.GetDeltas(expected)
         for layer in reversed(self.Layers):
-            gradient = np.dot(nextLayerDeltas.reshape(nextLayerDeltas.size, 1), layer.Activations.reshape(1,layer.Activations.size))
-            layer.Weights = np.add(layer.Weights, np.multiply(gradient,learningRate))
+            gradient = np.dot(nextLayerDeltas.reshape(nextLayerDeltas.size, 1), layer.Activations.reshape(1, layer.Activations.size))
+            #Insert the gradient at the beginning of the list, so that it ends up in the correct order
+            gradients.insert(0, gradient)
             nextLayerDeltas = layer.MakeDeltas(nextLayerDeltas)
+        return gradients
+
+    def ApplyGradients(self, gradients, learningRate):
+        for i in range(len(gradients)):
+            layer = self.Layers[i]
+            gradient = gradients[i]
+            layer.Weights = np.add(layer.Weights, np.multiply(gradient, learningRate))
