@@ -1,6 +1,7 @@
 import Layer
 import OutputLayer
 import numpy as np
+import copy
 
 class Network:
     def __init__(self, inputSize, outputSize, hiddenLayerSizes, useDropout=False, activationFunction="Sigmoid"):
@@ -48,3 +49,6 @@ class Network:
             layer = self.Layers[i]
             gradient = gradients[i]
             layer.Weights = np.add(layer.Weights, np.multiply(gradient, learningRate))
+
+    def MakeCopy(self):
+        return copy.deepcopy(self)
