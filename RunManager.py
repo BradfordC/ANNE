@@ -4,11 +4,11 @@ import Settings
 import random
 
 class RunManager:
-    def __init__(self, trainingSet, validationSet, useDropout, fileManager):
+    def __init__(self, trainingSet, validationSet, dropMode, fileManager):
         self.trainingSet = trainingSet
         self.validationSet = validationSet
 
-        self.net = Network.Network(len(trainingSet[0][0]), len(trainingSet[0][1]), [400, 400], useDropout)
+        self.net = Network.Network(len(trainingSet[0][0]), len(trainingSet[0][1]), [400, 400], dropMode)
         self.epoch = 0
         self.fileManager = fileManager
 
@@ -70,7 +70,7 @@ class RunManager:
 
     def GetAccuracy(self, set):
         network = self.net.MakeCopy()
-        network.RemoveDropout()
+        network.RemoveDrop()
         correctCount = 0
 
         for image in set:

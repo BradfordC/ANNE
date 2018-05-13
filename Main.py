@@ -18,13 +18,13 @@ validationSet = data[firstValidIndex:firstTestIndex]
 testingSet = data[firstTestIndex:]
 
 accuracySum = 0
-useDropout = True if Settings.Mode == 'Dropout' else False
+dropMode = Settings.Mode
 
 for i in range(Settings.Runs):
     print('Run', i)
     fileManager = FileManager('D:/Chris/Dropbox/Dropbox/School/ANN/Results/' + Settings.Mode + str(i) + '.csv')
 
-    manager = RunManager(trainingSet, validationSet, useDropout, fileManager)
+    manager = RunManager(trainingSet, validationSet, dropMode, fileManager)
     manager.Train()
     testAccuracy = manager.GetAccuracy(testingSet)
     fileManager.Write(testAccuracy)
@@ -34,5 +34,5 @@ for i in range(Settings.Runs):
     print()
 
 print(accuracySum / Settings.Runs)
-print(useDropout)
+print(dropMode)
 

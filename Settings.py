@@ -1,6 +1,6 @@
-Mode = 'Dropout'
+Mode = 'Dropconnect'
 
-Runs = 1
+Runs = 10
 MinibatchSize = 32
 LearningRate = 0.1
 EarlyStopPatience = 15

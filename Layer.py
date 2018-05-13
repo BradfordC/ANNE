@@ -3,7 +3,7 @@ import random
 import Functions
 
 class Layer:
-    def __init__(self, size, nextLayerSize, dropoutRate=0, activationMode="Sigmoid"):
+    def __init__(self, size, nextLayerSize, dropoutRate=0, activationMode="Sigmoid", dropconnectRate = 0):
         self.Size = size
         self.NodeCount = size + 1
 
@@ -12,6 +12,8 @@ class Layer:
         self.Weights = np.zeros(shape=(nextLayerSize, self.NodeCount))
 
         self.DropoutRate = dropoutRate
+        self.DropconnectRate = dropconnectRate
+        self.DropconnectMask = None
 
         self.Mode = activationMode
 
@@ -20,10 +22,6 @@ class Layer:
             for column in range(0, self.Weights.shape[1]):
                 self.Weights[row,column] = np.random.normal(0, .01)
 
-
-
-    #def GetWeightsWithoutBias(self):
-
     def Feedforward(self, values):
         if(self.Values.size != values.size):
             print("Input size didn't match: {} vs {}".format(self.Values.size, values.size))
@@ -31,7 +29,11 @@ class Layer:
 
         self.Values = values.copy()
         self.__Activate()
-        Output = np.dot(self.Weights, self.Activations)
+        weights = self.Weights
+        if(self.DropconnectRate > 0):
+            self.__MakeDropconnectMask()
+            weights = np.multiply(weights, self.DropconnectMask)
+        Output = np.dot(weights, self.Activations)
         return Output
 
     def MakeDeltas(self, nextLayerDeltas):
@@ -75,9 +77,13 @@ class Layer:
                 self.Activations[i] = max(self.Values[i], 0)
 
         if(self.DropoutRate > 0):
-            for i in range(self.Activations.size):
-                if(random.random() < self.DropoutRate):
-                    self.Activations[i] = 0
+                for i in range(self.Activations.size):
+                    if(random.random() < self.DropoutRate):
+                        self.Activations[i] = 0
+
 
         # Bias node
         self.Activations[-1] = 1
+
+    def __MakeDropconnectMask(self):
+        self.DropconnectMask = np.random.choice([0,1], size=self.Weights.shape, p=[self.DropconnectRate, 1 - self.DropconnectRate])
