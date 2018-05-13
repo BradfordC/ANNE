@@ -8,6 +8,7 @@ data = GetInput.LoadAllCategories("D:/Chris/Dropbox/Dropbox/School/ANN/SmallSet"
 random.shuffle(data)
 print(len(data))
 print(len(data[0][0]))
+print(Settings.Mode)
 
 firstValidIndex = int(len(data) * .7)
 firstTestIndex = int(len(data) * .85)
