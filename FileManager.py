@@ -15,5 +15,5 @@ class FileManager:
 
     def Write(self, string):
         string = str(string)
-        with open(self.filePath, 'w+') as file:
+        with open(self.filePath, 'a') as file:
             file.write(string + '\n')
