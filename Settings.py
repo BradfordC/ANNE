@@ -1,3 +1,6 @@
-MinibatchSize = 16
+Mode = 'Dropout'
+
+Runs = 2
+MinibatchSize = 32
 LearningRate = 0.1
-EarlyStopPatience = 10
+EarlyStopPatience = 15

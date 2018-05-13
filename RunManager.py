@@ -4,13 +4,13 @@ import Settings
 import random
 
 class RunManager:
-    def __init__(self, trainingSet, validationSet, useDropout):
+    def __init__(self, trainingSet, validationSet, useDropout, fileManager):
         self.trainingSet = trainingSet
         self.validationSet = validationSet
 
         self.net = Network.Network(len(trainingSet[0][0]), len(trainingSet[0][1]), [400, 400], useDropout)
-
         self.epoch = 0
+        self.fileManager = fileManager
 
         self.bestAccuracy = 0
         self.bestEpoch = 0
@@ -58,7 +58,9 @@ class RunManager:
             #Report the performance of the network at the end of each epoch
             trainingAccuracy = correct / len(self.trainingSet)
             validAccuracy = self.GetAccuracy(self.validationSet)
-            print(self.epoch, ',', trainingAccuracy, ',', validAccuracy)
+            performanceString = str(self.epoch) + ',' + str(trainingAccuracy) + ',' + str(validAccuracy)
+            print(performanceString)
+            self.fileManager.Write(performanceString)
 
             stillImproving = self.CheckImprovement(validAccuracy)
             self.epoch += 1

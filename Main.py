@@ -1,5 +1,7 @@
 import GetInput
+import Settings
 from RunManager import RunManager
+from FileManager import FileManager
 import random
 
 data = GetInput.LoadAllCategories("D:/Chris/Dropbox/Dropbox/School/ANN/SmallSet", "Full")
@@ -14,18 +16,22 @@ trainingSet = data[:firstValidIndex]
 validationSet = data[firstValidIndex:firstTestIndex]
 testingSet = data[firstTestIndex:]
 
-numRuns = 2
 accuracySum = 0
-useDropout = True
+useDropout = True if Settings.Mode == 'Dropout' else False
 
-for i in range(numRuns):
-    manager = RunManager(trainingSet, validationSet, useDropout)
+for i in range(Settings.Runs):
+    print('Run', i)
+    fileManager = FileManager('D:/Chris/Dropbox/Dropbox/School/ANN/Results/' + Settings.Mode + str(i) + '.csv')
+
+    manager = RunManager(trainingSet, validationSet, useDropout, fileManager)
     manager.Train()
     testAccuracy = manager.GetAccuracy(testingSet)
+    fileManager.Write(testAccuracy)
+
     accuracySum += testAccuracy
     print(testAccuracy)
     print()
 
-print(accuracySum / numRuns)
+print(accuracySum / Settings.Runs)
 print(useDropout)
 
